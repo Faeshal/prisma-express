@@ -7,7 +7,15 @@ const prisma = new PrismaClient();
 // @desc    Get All trips
 // @access  Public
 exports.getTrips = asyncHandler(async (req, res, next) => {
-  const trip = await prisma.trip.findMany();
+  const trip = await prisma.trip.findMany({
+    include: {
+      item: {
+        include: {
+          client: true,
+        },
+      },
+    },
+  });
   res.status(200).json({ success: true, data: trip });
 });
 
@@ -17,12 +25,22 @@ exports.getTrips = asyncHandler(async (req, res, next) => {
 exports.createTrip = asyncHandler(async (req, res, next) => {
   const { driver, clients, items } = req.body;
   console.log("BODY:", req.body);
-  const trip = await prisma.trip.create({
-    data: { driver: driver },
-  });
 
-  await prisma.TripClient.create({
-    data: { clientId: 1, tripId: trip.id },
+  let clientArr = [];
+  for (client of clients) {
+    let obj = {
+      clientId: parseInt(client),
+    };
+    clientArr.push(obj);
+  }
+
+  const trip = await prisma.trip.create({
+    data: {
+      driver: driver,
+      client: {
+        create: clientArr,
+      },
+    },
   });
 
   // * Update Item
