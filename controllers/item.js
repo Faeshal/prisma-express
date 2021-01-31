@@ -7,7 +7,11 @@ const prisma = new PrismaClient();
 // @desc    Get All items
 // @access  Public
 exports.getItems = asyncHandler(async (req, res, next) => {
-  const item = await prisma.item();
+  const item = await prisma.item.findMany({
+    include: {
+      trip: true,
+    },
+  });
   res.status(200).json({ success: true, data: item });
 });
 
