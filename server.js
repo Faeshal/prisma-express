@@ -23,6 +23,6 @@ app.listen(PORT, (err) => {
   if (err) {
     console.log("Error:", err);
   } else {
-    console.log("Server is Running on Port: " + PORT);
+    console.log("TEST MERGE DARI DEV " + PORT);
   }
 });

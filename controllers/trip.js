@@ -14,8 +14,10 @@ exports.getTrips = asyncHandler(async (req, res, next) => {
           client: true,
         },
       },
+      client: true,
     },
   });
+
   res.status(200).json({ success: true, data: trip });
 });
 
@@ -52,4 +54,40 @@ exports.createTrip = asyncHandler(async (req, res, next) => {
   }
 
   res.status(201).json({ success: true, data: "Success Create Trip" });
+});
+
+// * @route POST /api/trips/removeitems/:id
+// @desc    Create trips
+// @access  Public
+exports.removeItemsFromTrip = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+
+  const item = await prisma.item.update({
+    data: { tripId: null },
+    where: { id: parseInt(id) },
+  });
+  console.log("item:", item);
+
+  res
+    .status(201)
+    .json({ success: true, data: "Success remove item from trips" });
+});
+
+// * @route POST /api/trips/removeclients/:id
+// @desc    Delete Client from trips
+// @access  Public
+exports.removeClientFromTrip = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+
+  const tripId=await prisma.tripClient.findUnique({})
+
+  const trip = await prisma.tripClient.delete({
+    where: { clientId_tripId: { clientId: 3, tripId: id } },
+  });
+
+  console.log(trip);
+
+  res
+    .status(201)
+    .json({ success: true, data: "Success remove client from trips" });
 });
