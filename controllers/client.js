@@ -12,7 +12,7 @@ exports.getClient = asyncHandler(async (req, res, next) => {
       item: true,
     },
   });
-  res.status(200).json({ success: true, data: client });
+  res.status(200).son({ success: true, data: client });
 });
 
 // * @route POST /api/clients
