@@ -5,22 +5,22 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon server.js",
-    "migrate": "npx prisma migrate dev --preview-feature"
+    "pmigrate": "npx prisma migrate dev",
+    "pdeploy": "npx prisma migrate deploy"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@honeybadger-io/js": "^3.2.0",
-    "@prisma/client": "^2.15.0",
+    "@prisma/client": "^4.4.0",
     "express": "^4.17.1",
     "express-async-handler": "^1.1.4",
     "morgan": "^1.10.0",
-    "pretty-error": "^2.1.1",
-    "rollbar": "^2.21.1"
+    "pretty-error": "^2.1.1"
   },
   "devDependencies": {
-    "@prisma/cli": "^2.15.0",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "prisma": "^4.4.0"
   }
 }
