@@ -1,25 +1,18 @@
 require("pretty-error").start();
 const express = require("express");
 const app = express();
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 const PORT = 3000;
 const morgan = require("morgan");
 const clientRoutes = require("./routes/client");
 const itemRoutes = require("./routes/item");
 const tripRoutes = require("./routes/trip");
-// const Rollbar = require("rollbar");
-// const rollbar = new Rollbar({
-//   accessToken: "7a97ecbd2e72473ba10242f2de8849b8",
-//   captureUncaught: true,
-//   captureUnhandledRejections: true,
-// });
-
-// const Honeybadger = require("@honeybadger-io/js");
-// Honeybadger.configure({
-//   apiKey: "c95c2812",
-// });
+const log4js = require("log4js");
+const log = log4js.getLogger("entrypoint");
+log.level = "info";
 
 // * Main & Log
-// app.use(Honeybadger.requestHandler);
 app.use(morgan("dev"));
 app.use(express.json());
 
@@ -31,13 +24,27 @@ app.use(clientRoutes);
 app.use(itemRoutes);
 app.use(tripRoutes);
 
-// * Rollbar
-// app.use(rollbar.errorHandler());
+// * database
+async function prismaConn() {
+  await prisma.user.findFirst();
+}
 
+prismaConn()
+  .then(async () => {
+    log.info("Prisma Connected ✅");
+    await prisma.$disconnect();
+  })
+  .catch(async (e) => {
+    log.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  });
+
+// * server listen
 app.listen(PORT, (err) => {
   if (err) {
-    console.log("Error:", err);
+    log.error("Error:", err);
   } else {
-    console.log("Running on port" + PORT);
+    log.info("Running on port: " + PORT);
   }
 });

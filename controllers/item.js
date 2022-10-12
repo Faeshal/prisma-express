@@ -2,6 +2,9 @@ require("pretty-error").start();
 const asyncHandler = require("express-async-handler");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
+const log4js = require("log4js");
+const log = log4js.getLogger("item");
+log.level = "info";
 
 // * @route GET /api/items
 // @desc    Get All items

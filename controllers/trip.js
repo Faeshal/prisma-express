@@ -2,6 +2,9 @@ require("pretty-error").start();
 const asyncHandler = require("express-async-handler");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
+const log4js = require("log4js");
+const log = log4js.getLogger("trip");
+log.level = "info";
 
 // * @route GET /api/trips
 // @desc    Get All trips
@@ -79,7 +82,7 @@ exports.removeItemsFromTrip = asyncHandler(async (req, res, next) => {
 exports.removeClientFromTrip = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
 
-  const tripId=await prisma.tripClient.findUnique({})
+  const tripId = await prisma.tripClient.findUnique({});
 
   const trip = await prisma.tripClient.delete({
     where: { clientId_tripId: { clientId: 3, tripId: id } },
